@@ -1,0 +1,2 @@
+command to generate proto file
+C:\Users\teste\OneDrive\Desktop\bin\protoc.exe --proto_path=. ./protos/dummy.proto --js_out=import_style=commonjs,binary:./server --grpc_out=./server --plugin=protoc-gen-grpc=C:\Users\teste\AppData\Roaming\npm\grpc_tools_node_protoc_plugin.cmd
