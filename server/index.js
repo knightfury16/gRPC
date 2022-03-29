@@ -1,9 +1,20 @@
 const calculator = require('./protos/calculator_pb');
 const service = require('./protos/calculator_grpc_pb');
+const GreetService = require('./protos/greet_grpc_pb');
+const Greet = require('./protos/greet_pb');
 const grpc = require('grpc');
 
 
 // Implements the greet rpc method
+
+function greet(call, callback){
+    const greetResponse = new Greet.GreetResponse();
+    greetResponse.setResult(
+        'Hello ' + call.request.getGreeting().getFirstName()
+    )
+    callback(null,greetResponse);
+}
+
 
 function sum(call, callback){
     var sumResponse = new calculator.SumResponse();
@@ -24,8 +35,10 @@ function sub(call, callback){
     callback(null,subResponse);
 }
 
+
 const server = new grpc.Server();
 server.addService(service.CalculatorServiceService, {sum:sum,sub:sub});
+server.addService(GreetService.GreetServiceService, {greet:greet});
 server.bind("127.0.0.1:50051", grpc.ServerCredentials.createInsecure());
 server.start();
 
