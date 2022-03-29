@@ -10,7 +10,7 @@ const authenticate = (username, passward) => {
     users.forEach(user => {
         if(username === user.name  && passward === user.passward){
             found = true;
-            if(!activeUser.find(user => user.name == username))activeUser.push(username);
+            if(activeUser.find(user => user === username ) == undefined)activeUser.push(username);
         }
     });
 
