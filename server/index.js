@@ -9,7 +9,7 @@ require('dotenv').config();
 
 const server = new grpc.Server();
 server.addService(UserService.UserServiceService, {signUp:signUp, signIn:signIn,logout:logout});
-server.bind(process.env.PORT || "127.0.0.1:50051", grpc.ServerCredentials.createInsecure());
+server.bind("0.0.0.0:" + process.env.PORT || "127.0.0.1:50051", grpc.ServerCredentials.createInsecure());
 server.start();
 
 console.log(`Server is up and running in port ${process.env.PORT}`);
