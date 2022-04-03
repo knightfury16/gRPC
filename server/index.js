@@ -1,8 +1,8 @@
 const UserService = require('./protos/user_grpc_pb');
 const grpc = require('grpc');
-const signIn = require('./rpc method/signIn');
-const signUp = require('./rpc method/signUp');
-const logout = require('./rpc method/logout');
+const signIn = require('./rpc methods/signIn');
+const signUp = require('./rpc methods/signUp');
+const logout = require('./rpc methods/logout');
 
 
 

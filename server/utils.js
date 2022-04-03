@@ -1,34 +1,42 @@
+const bcrypt = require('bcrypt');
+const {connection} = require('./sqlConnection');
 
-let users = [];
 let activeUser = [];
+const saltRounds = 8;
 
+// Return true or false
+const addUser = (username, passward) => {
+
+    return new Promise((resolve,reject) => {
+        
+        // hash the password
+        const hashed_pssword = bcrypt.hashSync(passward,saltRounds);
+        
+        connection.query("INSERT INTO Users (username, user_password) VALUES (?,?)",[username,hashed_pssword],
+        (err,result) => {
+            if(err){
+                reject(err);
+            }
+            activeUser.push(username);
+            resolve(result);
+        });
+    });
+}
 
 const authenticate = (username, passward) => {
 
-    let found = false;
-
-    users.forEach(user => {
-        if(username === user.name  && passward === user.passward){
-            found = true;
-            if(activeUser.find(user => user === username ) == undefined)activeUser.push(username);
-        }
-    });
-
-    return found;
-}
-
-const addUser = (username, passward) => {
-    
-    if(users.find(user => user.name == username)){
-        return false;
-    }
-
-    users.push({
-        name:username,
-        passward: passward
-    });
-    activeUser.push(username);
-    return true;
+    return new Promise((resolve,reject) => {
+        connection.query("SELECT * FROM Users WHERE username = ?",[username],
+        (err,result) => {
+            if(result.length == 1 && bcrypt.compareSync(passward,result[0].user_password)){
+                if(activeUser.find(user => user === username ) == undefined)activeUser.push(username);
+                resolve(result);
+            }
+            else{
+                reject(err)
+            }
+        });
+    })
 }
 
 const logOut = (username) => {
@@ -43,7 +51,7 @@ const logOut = (username) => {
 }
 
 module.exports = {
-    authenticate,
     addUser,
+    authenticate,
     logOut
 }
